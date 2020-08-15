@@ -1,3 +1,5 @@
 # Example dbt_project.yml file
-name: 'dengelmo'
+name: deputy
 profile: 'dengelmo'
+version: 1.0.0
+config-version: 2

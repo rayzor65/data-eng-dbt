@@ -1,0 +1,75 @@
+version: 2
+
+models:
+  - name: deputy_created_bronze
+    description: Raw deputy_created table with region added
+    columns:
+      - name: DEPUTY_ID
+        tests:
+          - unique
+          - not_null
+      - name: REGION
+        tests:
+          - accepted_values:
+              values: ['au','uk','eu','na','as']
+
+  - name: deputy_user_silver
+    description: Base user table, contains everything from deputy_created_bronze with CREATED_AT, DELETED_AT added  
+    tests:
+      # The number of users should never change
+      - dbt_utils.equal_rowcount:
+          compare_model: ref('deputy_created_bronze')    
+    columns:
+      - name: DEPUTY_ID
+        tests:
+          - unique
+          - not_null          
+      - name: CREATED_AT
+        tests:
+          - not_null
+      - name: DEPUTY_ID
+        tests:
+          - relationships:
+              to: ref('deputy_created_bronze')
+              field: DEPUTY_ID
+
+  - name: deputy_updated_bronze
+    description: Raw deputy_updated table with a unique identifier added
+    columns:
+      - name: UUID
+        tests:
+          - unique
+          - not_null
+ 
+  - name: deputy_last_updated_silver
+    description: Contains the last deputy_updated event for a user. Useful to see user's current DEPUTY_EDITION
+    columns:
+      - name: DEPUTY_ID
+        tests:
+          - unique
+          - not_null
+      - name: DEPUTY_EDITION
+        tests:
+          - accepted_values:
+              values: ['paid_scheduling_only','free','paid_flexi','enterprise','mobile_only','yearly','paid_timesheet_only']
+
+  - name: deputy_user_stats_gold
+    description: Statistics for users eg total active users
+    columns:
+      - name: TOTAL_USERS
+        tests:
+        # Sanity test to check the number of active + deleted users = total users
+        - total_users
+
+  - name: deputy_user_conversions_silver
+    description: User's DEPUTY_EDITION conversions and the time taken
+    columns:
+      - name: END_TIME
+        tests:
+          - not_null
+      - name: START_TIME
+        tests:
+          - not_null
+
+  - name: deputy_user_conversions_gold
+    description: Statistics on conversions
