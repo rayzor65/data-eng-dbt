@@ -12,6 +12,25 @@ models:
         tests:
           - accepted_values:
               values: ['au','uk','eu','na','as']
+      - name: DEPUTY_EDITION
+        tests:
+          - accepted_values:
+              values: ['pro_trial','paid_premium']              
+
+  - name: deputy_events_bronze
+    description: Raw deputy_created and deputy_updated table
+    columns:
+      - name: DEPUTY_EDITION_ID
+        tests:
+          - not_null
+
+  - name: deputy_conversions_bronze
+    description: Base conversions table
+    columns:
+      - name: PREV_DEPUTY_EDITION_ID
+        tests:
+          - accepted_values:
+              values: [0, 1]  
 
   - name: deputy_user_silver
     description: Base user table, contains everything from deputy_created_bronze with CREATED_AT, DELETED_AT added  

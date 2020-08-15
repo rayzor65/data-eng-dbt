@@ -1,0 +1,5 @@
+{{ config(materialized="table") }}
+
+SELECT * FROM DEPUTY_CREATED
+UNION
+SELECT * FROM DEPUTY_UPDATED
