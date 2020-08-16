@@ -27,10 +27,23 @@ models:
   - name: deputy_conversions_bronze
     description: Base conversions table
     columns:
+      - name: END_TIME
+        tests:
+          - not_null
+
+  - name: deputy_paid_conversions_bronze
+    description: Paid conversions table
+    columns:
       - name: PREV_DEPUTY_EDITION_ID
         tests:
           - accepted_values:
               values: [0, 1]  
+      - name: END_TIME
+        tests:
+          - not_null
+      - name: START_TIME
+        tests:
+          - not_null              
 
   - name: deputy_user_silver
     description: Base user table, contains everything from deputy_created_bronze with CREATED_AT, DELETED_AT added  
@@ -79,16 +92,6 @@ models:
         tests:
         # Sanity test to check the number of active + deleted users = total users
         - total_users
-
-  - name: deputy_user_conversions_silver
-    description: User's DEPUTY_EDITION conversions and the time taken
-    columns:
-      - name: END_TIME
-        tests:
-          - not_null
-      - name: START_TIME
-        tests:
-          - not_null
 
   - name: deputy_user_conversions_gold
     description: Statistics on conversions
