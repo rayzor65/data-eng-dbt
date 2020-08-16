@@ -1,4 +1,5 @@
-{{ config(materialized="table") }}
+{{ config(materialized="view") }}
 
-SELECT du.*, uuid_string(uuid_string(),DEPUTY_ID) as uuid 
+SELECT du.*, row_number() over (order by DEPUTY_ID, TIMESTAMP) as ROW_NUMBER
     FROM DEPUTY_UPDATED du
+    ORDER BY DEPUTY_ID, TIMESTAMP

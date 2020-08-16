@@ -1,4 +1,4 @@
-{{ config(materialized="table") }}
+{{ config(materialized="view") }}
 
 SELECT * FROM DEPUTY_CREATED
 UNION
